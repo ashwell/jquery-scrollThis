@@ -54,6 +54,25 @@
 			list.css({top: off});
 		};
 
+		base.scrollToTop = function(){
+			var top = upBtn[0].offsetHeight;
+			list.css({
+				'top': top
+			});
+		};
+		base.scrollToBottom = function(){
+			var bottom = upBtn[0].offsetHeight - list[0].offsetHeight + (wrapper[0].offsetHeight - (2*upBtn[0].offsetHeight));
+			list.css({
+				'top': bottom
+			});
+		};
+
+		// Add Scroll to top and bottom functions to element
+		$.extend(list[0], {
+			'scrollThisToTop'     : function(){ base.scrollToTop(); },
+			'scrollThisToBottom'  : function(){ base.scrollToBottom(); }
+		});
+
 		base.timeoutID = null;
 		base.start = function(dir){
 			if( base.timeoutID != null ){
@@ -105,9 +124,29 @@
 			downBtn:"down"
 		}
 	};
+	// Constructor
 	$.fn.scrollThis = function(options) {
 		return this.each(function(i){
 			if ((typeof(options)).match('object|undefined')){ (new $.scrollThis(this, options));}
 		});
+	};
+	// Expose ScrollThis Functions to jQuery
+	$.fn.scrollThisToTop = function() {
+		this.each(function(){
+			if(typeof this.scrollThisToTop === 'function'){
+				this.scrollThisToTop();
+			}
+			return $(this);
+		});
+		return $(this);
+	};
+	$.fn.scrollThisToBottom = function() {
+		this.each(function(){
+			if(typeof this.scrollThisToBottom === 'function'){
+				this.scrollThisToBottom();
+			}
+			return $(this);
+		});
+		return $(this);
 	};
 })(window, jQuery);
